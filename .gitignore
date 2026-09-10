@@ -1,0 +1,22 @@
+# Build artifacts
+/bin/
+/dist/
+/engageops
+/engageops.exe
+
+# Local state and secrets — never commit real engagement-platform state or
+# credentials.
+*.tfstate.json
+*.tfstate.json.backup
+.env
+.env.*
+
+# Go
+*.test
+*.out
+vendor/
+
+# Editors / OS
+.DS_Store
+.idea/
+*.swp

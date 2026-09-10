@@ -1,0 +1,15 @@
+# Desired-state resource declarations. Run:
+#   engageops plan --dir examples/basic
+#   engageops apply --dir examples/basic
+resources:
+  - provider: customerio
+    type: segment
+    name: active_users
+    attributes:
+      name: "Active Users"
+
+  - provider: customerio
+    type: segment
+    name: churn_risk
+    attributes:
+      name: "Churn Risk"
