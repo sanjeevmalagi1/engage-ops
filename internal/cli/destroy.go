@@ -19,11 +19,12 @@ func newDestroyCommand() *cobra.Command {
 		Use:   "destroy",
 		Short: "Delete every resource engageops currently tracks in state",
 		RunE: func(cmd *cobra.Command, args []string) error {
-			cfg, err := config.Load(configDir)
+			dir, statePathResolved := resolvePaths(cmd)
+			cfg, err := config.Load(dir)
 			if err != nil {
 				return err
 			}
-			st, err := state.Load(statePath)
+			st, err := state.Load(statePathResolved)
 			if err != nil {
 				return err
 			}
@@ -54,11 +55,11 @@ func newDestroyCommand() *cobra.Command {
 			}
 
 			if err := p.Apply(cmd.Context(), st); err != nil {
-				_ = st.Save(statePath)
+				_ = st.Save(statePathResolved)
 				return err
 			}
 
-			if err := st.Save(statePath); err != nil {
+			if err := st.Save(statePathResolved); err != nil {
 				return err
 			}
 			fmt.Fprintln(out, "\nDestroy complete.")

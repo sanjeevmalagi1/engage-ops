@@ -4,12 +4,7 @@
 resources:
   - provider: customerio
     type: segment
-    name: active_users
+    name: active_users_1
     attributes:
       name: "Active Users"
 
-  - provider: customerio
-    type: segment
-    name: churn_risk
-    attributes:
-      name: "Churn Risk"

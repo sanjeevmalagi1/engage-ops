@@ -17,7 +17,7 @@ func newPlanCommand() *cobra.Command {
 		Use:   "plan",
 		Short: "Show what engageops apply would do, without changing anything",
 		RunE: func(cmd *cobra.Command, args []string) error {
-			p, _, err := buildPlan(cmd)
+			p, _, _, err := buildPlan(cmd)
 			if err != nil {
 				return err
 			}
@@ -27,23 +27,25 @@ func newPlanCommand() *cobra.Command {
 	}
 }
 
-// buildPlan loads config + state from the shared --dir/--state flags and
-// computes a plan, returning the state alongside it so callers (apply,
-// destroy) can reuse the same load without reading twice.
-func buildPlan(cmd *cobra.Command) (*plan.Plan, *state.State, error) {
-	cfg, err := config.Load(configDir)
+// buildPlan loads config + state from the shared --dir/--state/--env flags
+// and computes a plan, returning the state and the resolved state path
+// alongside it so callers (apply, destroy) can reuse the same load without
+// reading twice.
+func buildPlan(cmd *cobra.Command) (*plan.Plan, *state.State, string, error) {
+	dir, statePathResolved := resolvePaths(cmd)
+	cfg, err := config.Load(dir)
 	if err != nil {
-		return nil, nil, err
+		return nil, nil, "", err
 	}
-	st, err := state.Load(statePath)
+	st, err := state.Load(statePathResolved)
 	if err != nil {
-		return nil, nil, err
+		return nil, nil, "", err
 	}
 	p, err := plan.Build(cmd.Context(), cfg, st)
 	if err != nil {
-		return nil, nil, err
+		return nil, nil, "", err
 	}
-	return p, st, nil
+	return p, st, statePathResolved, nil
 }
 
 func printPlan(w io.Writer, p *plan.Plan) {
