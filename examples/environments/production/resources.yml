@@ -1,0 +1,11 @@
+# Desired-state resource declarations for production. Run either:
+#   engageops plan --dir examples/environments/production --state production.tfstate.json
+# or, from inside examples/ (so --env's environments/<env> default resolves
+# to this directory):
+#   cd examples && engageops plan --env production
+resources:
+  - provider: customerio
+    type: segment
+    name: active_users
+    attributes:
+      name: "Active Users"

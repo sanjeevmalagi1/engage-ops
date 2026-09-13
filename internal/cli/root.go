@@ -16,6 +16,7 @@ import (
 var (
 	configDir string
 	statePath string
+	envName   string
 )
 
 // NewRootCommand builds the engageops root cobra command with all
@@ -31,6 +32,7 @@ func NewRootCommand() *cobra.Command {
 
 	root.PersistentFlags().StringVar(&configDir, "dir", ".", "directory containing engage-ops *.yml config files")
 	root.PersistentFlags().StringVar(&statePath, "state", "engageops.tfstate.json", "path to the state file")
+	root.PersistentFlags().StringVar(&envName, "env", "", "environment name (e.g. staging, production) — selects environments/<env> as the config dir and a per-environment state file, unless --dir/--state are set explicitly")
 
 	root.AddCommand(
 		newValidateCommand(),

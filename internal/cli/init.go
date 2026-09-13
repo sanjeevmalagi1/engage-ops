@@ -31,11 +31,12 @@ func newInitCommand() *cobra.Command {
 		Use:   "init",
 		Short: "Scaffold a starter engageops.yml config in the target directory",
 		RunE: func(cmd *cobra.Command, args []string) error {
-			if err := os.MkdirAll(configDir, 0o755); err != nil {
+			dir, _ := resolvePaths(cmd)
+			if err := os.MkdirAll(dir, 0o755); err != nil {
 				return fmt.Errorf("create config dir: %w", err)
 			}
 
-			path := filepath.Join(configDir, "engageops.yml")
+			path := filepath.Join(dir, "engageops.yml")
 			if _, err := os.Stat(path); err == nil {
 				return fmt.Errorf("%q already exists, remove it first if you want to regenerate", path)
 			}

@@ -15,7 +15,7 @@ func newApplyCommand() *cobra.Command {
 		Use:   "apply",
 		Short: "Apply the changes required to reach the desired config",
 		RunE: func(cmd *cobra.Command, args []string) error {
-			p, st, err := buildPlan(cmd)
+			p, st, statePathResolved, err := buildPlan(cmd)
 			if err != nil {
 				return err
 			}
@@ -39,11 +39,11 @@ func newApplyCommand() *cobra.Command {
 			if err := p.Apply(cmd.Context(), st); err != nil {
 				// Persist whatever succeeded before the failure so state
 				// stays in sync with reality and the next apply can resume.
-				_ = st.Save(statePath)
+				_ = st.Save(statePathResolved)
 				return err
 			}
 
-			if err := st.Save(statePath); err != nil {
+			if err := st.Save(statePathResolved); err != nil {
 				return err
 			}
 			fmt.Fprintln(out, "\nApply complete.")

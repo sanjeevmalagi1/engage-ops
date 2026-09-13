@@ -15,10 +15,10 @@ engageops apply     # make it so
 
 Engagement platform configuration (segments, campaigns, journeys, audiences)
 tends to live only in each vendor's dashboard: no diff, no review, no audit
-trail, no way to promote a change from staging to production. `engage-ops`
-brings the same discipline Terraform brought to cloud infrastructure —
-declarative config, a plan/apply workflow, and a state file — to this
-category of tooling.
+trail. `engage-ops` brings the same discipline Terraform brought to cloud
+infrastructure — declarative config, a plan/apply workflow, a state file,
+and (see [Environments](#environments)) a way to promote a change from
+staging to production — to this category of tooling.
 
 ## Status
 
@@ -72,6 +72,32 @@ resources:
 `engageops` does not yet expand `${VAR}` placeholders in YAML (see
 [Roadmap](#roadmap)) — keep real credentials out of version control via a
 gitignored local file or a config generated from a secrets manager.
+
+## Environments
+
+Most teams manage separate projects per platform per environment (e.g. a
+staging and a production Customer.io project), each needing its own
+credentials and its own state. `--env <name>` derives both from a
+convention, so you don't have to pass `--dir`/`--state` by hand every time:
+
+- config dir defaults to `environments/<name>` (relative to the current
+  directory) instead of `.`
+- state file defaults to `engageops.<name>.tfstate.json` instead of
+  `engageops.tfstate.json`
+
+An explicit `--dir` or `--state` always takes precedence over `--env`'s
+defaults, so existing single-environment invocations are unaffected.
+
+```sh
+engageops init --env staging      # scaffolds environments/staging/engageops.yml
+engageops init --env production   # scaffolds environments/production/engageops.yml
+
+engageops plan --env staging      # loads environments/staging, diffs against engageops.staging.tfstate.json
+engageops apply --env production  # loads environments/production, diffs against engageops.production.tfstate.json
+```
+
+See [`examples/environments`](examples/environments) for a runnable
+staging/production example.
 
 ## State
 

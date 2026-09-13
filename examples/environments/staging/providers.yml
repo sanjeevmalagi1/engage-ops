@@ -1,0 +1,9 @@
+# Credentials for the staging Customer.io project.
+#
+# engageops does not (yet) expand ${VAR} placeholders in YAML — see the
+# "Environment variable interpolation" item in README.md's roadmap. Until
+# that lands, put real values here via a gitignored local override file, or
+# generate this file from a secrets manager before running engageops.
+providers:
+  customerio:
+    app_api_key: "REPLACE_ME"

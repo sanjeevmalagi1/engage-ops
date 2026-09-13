@@ -15,7 +15,8 @@ func newValidateCommand() *cobra.Command {
 		Use:   "validate",
 		Short: "Check that the config directory parses, providers are configured, and resource types are known",
 		RunE: func(cmd *cobra.Command, args []string) error {
-			cfg, err := config.Load(configDir)
+			dir, _ := resolvePaths(cmd)
+			cfg, err := config.Load(dir)
 			if err != nil {
 				return err
 			}

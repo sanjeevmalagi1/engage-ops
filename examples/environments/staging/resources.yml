@@ -1,0 +1,11 @@
+# Desired-state resource declarations for staging. Run either:
+#   engageops plan --dir examples/environments/staging --state staging.tfstate.json
+# or, from inside examples/ (so --env's environments/<env> default resolves
+# to this directory):
+#   cd examples && engageops plan --env staging
+resources:
+  - provider: customerio
+    type: segment
+    name: active_users
+    attributes:
+      name: "Active Users"
